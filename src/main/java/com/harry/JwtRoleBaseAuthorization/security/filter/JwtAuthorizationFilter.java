@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 try {
                     String token = getTokenFromHeader(request);
 
-                    String username = jwtService.validateToken(token);
+                    String username = jwtService.validateToken(token, false);
 
                     UserDetails userDetails = detailsPrincipal.loadUserByUsername(username);
 
@@ -80,7 +80,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean isAuthRequest(HttpServletRequest request) {
-        return request.getServletPath().equals("/api/v1/auth/login");
+        return request.getServletPath().equals("/api/v1/auth/login")
+                || request.getServletPath().equals("/api/v1/auth/register")
+                || request.getServletPath().equals("/api/v1/auth/refresh-token");
     }
 
     private boolean hasContainAuthHeader(HttpServletRequest request) {

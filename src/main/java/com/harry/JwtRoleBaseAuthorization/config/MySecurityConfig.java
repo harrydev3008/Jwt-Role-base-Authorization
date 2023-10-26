@@ -1,4 +1,4 @@
-package com.harry.JwtRoleBaseAuthorization.security;
+package com.harry.JwtRoleBaseAuthorization.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,18 +27,23 @@ public class MySecurityConfig {
     @Autowired
     private JwtAuthorizationFilter authorizationFilter;
 
+    // @Autowired
+    // private JwtEntryPoint jwtEntryPoint;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/api/v1/auth/**").permitAll();
+            auth.requestMatchers("/swagger-ui/**", "/api/v1/auth/**", "/v3/api-docs/**").permitAll();
             auth.requestMatchers("/api/v1/admin/**").authenticated();
         });
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authorizationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+        // http.exceptionHandling().authenticationEntryPoint(jwtEntryPoint);
 
         return http.build();
     }

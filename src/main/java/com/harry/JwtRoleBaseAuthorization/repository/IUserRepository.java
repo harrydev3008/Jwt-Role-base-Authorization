@@ -10,4 +10,6 @@ import com.harry.JwtRoleBaseAuthorization.model.ApplicationUser;
 @Repository
 public interface IUserRepository extends JpaRepository<ApplicationUser, Long> {
     Optional<ApplicationUser> findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }
